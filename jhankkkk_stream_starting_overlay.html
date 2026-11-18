@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JhanKKKk - Stream Starting Overlay</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for GTA 6 Vibe (Montserrat Black & Audiowide / Permanent Marker / Syncopate) -->
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Montserrat:ital,wght@0,900;1,900&family=Syncopate:wght@700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kick: '#53FC18',
+                        kickDark: '#121316',
+                        kickCard: '#1a1c23',
+                        gtaPink: '#FF2A85',
+                        gtaPurple: '#7A04EB',
+                        gtaCyan: '#00F0FF',
+                        gtaYellow: '#FFE600'
+                    },
+                    fontFamily: {
+                        gta: ['"Syncopate"', 'sans-serif'],
+                        gtaTitle: ['"Montserrat"', 'sans-serif'],
+                        cyber: ['"Audiowide"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scanlines & CRT FX */
+        body {
+            background-color: #0b0c10;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .scanlines {
+            background: linear-gradient(
+                rgba(18, 19, 22, 0) 50%, 
+                rgba(0, 0, 0, 0.3) 50%
+            );
+            background-size: 100% 4px;
+            z-index: 40;
+            pointer-events: none;
+        }
+
+        /* GTA VI Style Metallic & Neon Text Gradients */
+        .gta-text-gradient {
+            background: linear-gradient(180deg, #FFFFFF 0%, #FFE600 35%, #FF2A85 70%, #7A04EB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 25px rgba(255, 42, 133, 0.6));
+        }
+
+        .kick-glow {
+            box-shadow: 0 0 30px rgba(83, 252, 24, 0.4);
+        }
+
+        .cyber-card {
+            background: rgba(26, 28, 35, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(83, 252, 24, 0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+        }
+
+        .cyber-card-pink {
+            background: rgba(26, 28, 35, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 42, 133, 0.3);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+        }
+
+        /* Animated Grid Background */
+        .hero-grid {
+            background-image: 
+                linear-gradient(to right, rgba(83, 252, 24, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(83, 252, 24, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 50px; }
+        }
+
+        /* Floating Palm Trees / City Silhouette Glow */
+        .city-glow {
+            background: radial-gradient(circle at 50% 100%, rgba(122, 4, 235, 0.4) 0%, rgba(255, 42, 133, 0.15) 40%, transparent 80%);
+        }
+
+        /* Pulsing Animation */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 15px #53FC18); }
+            50% { opacity: 0.6; filter: drop-shadow(0 0 5px #53FC18); }
+        }
+        .pulse-kick {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        /* Custom Scrollbar for Controls */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #53FC18;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen relative text-white flex flex-col justify-between select-none">
+
+    <!-- Background Layers -->
+    <div class="absolute inset-0 hero-grid pointer-events-none z-0"></div>
+    <div class="absolute inset-0 city-glow pointer-events-none z-0"></div>
+    <div class="absolute inset-0 scanlines pointer-events-none"></div>
+
+    <!-- Decorative Top Glowing Bar -->
+    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-gtaPink via-kick to-gtaCyan z-50"></div>
+
+    <!-- TOP HEADER: Status & Platform Badge -->
+    <header class="relative z-30 w-full p-8 md:px-16 flex justify-between items-center">
+        <!-- Live Badge / Kick Branding -->
+        <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2 px-4 py-2 bg-kick text-kickDark font-gta font-black text-sm tracking-wider rounded-lg kick-glow">
+                <span class="w-3 h-3 bg-kickDark rounded-full animate-ping"></span>
+                <span>KICK LIVE</span>
+            </div>
+            <div class="hidden sm:flex items-center space-x-2 px-4 py-2 cyber-card rounded-lg text-kick border-l-4 border-kick">
+                <i class="fa-solid fa-gamepad text-lg"></i>
+                <span id="current-category" class="font-gta text-xs tracking-widest uppercase">Grand Theft Auto VI / Variety</span>
+            </div>
+        </div>
+
+        <!-- Streamer Tag Header -->
+        <div class="text-right">
+            <h3 class="text-xs font-gta text-gtaCyan tracking-[0.3em] uppercase">Broadcasting As</h3>
+            <p class="font-gtaTitle font-black text-xl text-white tracking-widest">JhanKKKk<span class="text-kick">.live</span></p>
+        </div>
+    </header>
+
+    <!-- CENTER HERO CONTENT -->
+    <main class="relative z-30 flex-1 flex flex-col items-center justify-center px-4 -mt-10">
+        
+        <!-- Main Status Ticker Badge -->
+        <div class="mb-6 px-6 py-2 rounded-full border border-gtaPink/40 bg-gtaPink/10 backdrop-blur-md flex items-center space-x-3 shadow-lg shadow-gtaPink/20 animate-bounce">
+            <span class="w-2.5 h-2.5 rounded-full bg-gtaPink animate-pulse"></span>
+            <span id="overlay-status-text" class="font-cyber text-gtaPink tracking-widest text-sm uppercase">Stream Starting Soon</span>
+        </div>
+
+        <!-- Giant Stylized GTA 6 Inspired Name -->
+        <div class="text-center relative max-w-5xl mx-auto">
+            <h1 class="font-gtaTitle font-black text-6xl md:text-9xl uppercase tracking-tighter gta-text-gradient transform hover:scale-105 transition-transform duration-500">
+                JhanKKKk
+            </h1>
+            <div class="absolute -bottom-4 right-2 md:right-10 px-3 py-1 bg-gtaCyan text-kickDark font-gta font-black text-xs md:text-sm tracking-widest rounded skew-x-[-12deg] shadow-lg">
+                VI EDITION
+            </div>
+        </div>
+
+        <!-- Countdown Timer Card -->
+        <div class="mt-12 cyber-card p-6 md:px-12 md:py-6 rounded-2xl flex items-center space-x-8 border-t-2 border-kick">
+            <div class="text-center">
+                <span class="block text-xs font-gta text-gray-400 tracking-widest mb-1">STARTING IN</span>
+                <div id="countdown-timer" class="font-cyber text-4xl md:text-6xl text-kick font-bold tracking-widest drop-shadow-[0_0_15px_rgba(83,252,24,0.6)]">
+                    05:00
+                </div>
+            </div>
+            <div class="h-12 w-px bg-gray-700 hidden sm:block"></div>
+            <div class="hidden sm:block text-left">
+                <p class="text-xs font-gta text-gtaCyan tracking-widest">GET YOUR SNACKS</p>
+                <p class="text-xs text-gray-300 font-medium mt-1">Chat is open • Drop your hype emotes!</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER: Socials & Audio Visualizer Simulation -->
+    <footer class="relative z-30 w-full p-8 md:px-16 flex flex-col md:flex-row justify-between items-center gap-6">
+        
+        <!-- Social Handles Cards -->
+        <div class="flex items-center space-x-4">
+            <a href="https://kick.com" target="_blank" class="cyber-card px-5 py-3 rounded-xl flex items-center space-x-3 hover:border-kick transition-all group">
+                <div class="w-8 h-8 rounded-lg bg-kick/20 flex items-center justify-center text-kick group-hover:bg-kick group-hover:text-kickDark transition-colors">
+                    <i class="fa-solid fa-k text-base"></i>
+                </div>
+                <div class="text-left">
+                    <span class="block text-[10px] font-gta text-gray-400">KICK</span>
+                    <span class="font-gtaTitle font-bold text-sm text-white tracking-wider">@JhanKKKk</span>
+                </div>
+            </a>
+
+            <a href="https://twitter.com" target="_blank" class="cyber-card px-5 py-3 rounded-xl flex items-center space-x-3 hover:border-gtaCyan transition-all group">
+                <div class="w-8 h-8 rounded-lg bg-gtaCyan/20 flex items-center justify-center text-gtaCyan group-hover:bg-gtaCyan group-hover:text-kickDark transition-colors">
+                    <i class="fa-brands fa-x-twitter text-base"></i>
+                </div>
+                <div class="text-left">
+                    <span class="block text-[10px] font-gta text-gray-400">TWITTER / X</span>
+                    <span class="font-gtaTitle font-bold text-sm text-white tracking-wider">@JhanKKKk</span>
+                </div>
+            </a>
+
+            <a href="https://discord.com" target="_blank" class="cyber-card px-5 py-3 rounded-xl flex items-center space-x-3 hover:border-gtaPink transition-all group">
+                <div class="w-8 h-8 rounded-lg bg-gtaPink/20 flex items-center justify-center text-gtaPink group-hover:bg-gtaPink group-hover:text-white transition-colors">
+                    <i class="fa-brands fa-discord text-base"></i>
+                </div>
+                <div class="text-left">
+                    <span class="block text-[10px] font-gta text-gray-400">DISCORD</span>
+                    <span class="font-gtaTitle font-bold text-sm text-white tracking-wider">/JhanKKKk</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Simulated Audio Visualizer Bars -->
+        <div class="flex items-center space-x-1.5 h-10 px-4 cyber-card rounded-xl">
+            <span class="w-1 bg-kick h-3 animate-pulse rounded-full"></span>
+            <span class="w-1 bg-gtaPink h-8 animate-pulse rounded-full delay-75"></span>
+            <span class="w-1 bg-gtaCyan h-5 animate-pulse rounded-full delay-150"></span>
+            <span class="w-1 bg-kick h-9 animate-pulse rounded-full delay-200"></span>
+            <span class="w-1 bg-gtaYellow h-4 animate-pulse rounded-full delay-100"></span>
+            <span class="w-1 bg-gtaPurple h-7 animate-pulse rounded-full delay-300"></span>
+            <span class="w-1 bg-gtaPink h-6 animate-pulse rounded-full delay-75"></span>
+            <span class="w-1 bg-kick h-2 animate-pulse rounded-full"></span>
+            <span class="ml-2 text-[10px] font-gta text-gray-400 tracking-widest hidden sm:inline">AUDIO SYNCED</span>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE CONTROL PANEL (Collapsible for Streamer Testing) -->
+    <div id="control-panel" class="fixed bottom-6 right-6 z-50 transition-all duration-300">
+        <!-- Toggle Button -->
+        <button onclick="toggleControls()" class="bg-kick text-kickDark px-4 py-3 rounded-xl font-gta font-bold text-xs shadow-2xl flex items-center space-x-2 hover:bg-kick/95 transition-all kick-glow">
+            <i class="fa-solid fa-sliders text-sm"></i>
+            <span>OBS CONTROLS</span>
+        </button>
+
+        <!-- Controls Box -->
+        <div id="controls-body" class="hidden absolute bottom-14 right-0 w-80 cyber-card-pink p-5 rounded-2xl border border-gtaPink/40 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3">
+                <h4 class="font-gta font-bold text-xs text-gtaPink tracking-wider">STREAM CONTROLLER</h4>
+                <button onclick="toggleControls()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+
+            <!-- Status Changer -->
+            <div class="space-y-1.5">
+                <label class="text-[10px] font-gta text-gray-300 tracking-wider">OVERLAY STATUS</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="setStatus('Stream Starting Soon')" class="px-3 py-1.5 bg-gtaPink/20 hover:bg-gtaPink text-white text-xs font-gta rounded-lg border border-gtaPink/40 transition-all">Starting Soon</button>
+                    <button onclick="setStatus('Be Right Back')" class="px-3 py-1.5 bg-kick/20 hover:bg-kick hover:text-kickDark text-white text-xs font-gta rounded-lg border border-kick/40 transition-all">BRB</button>
+                </div>
+            </div>
+
+            <!-- Timer Controller -->
+            <div class="space-y-1.5">
+                <label class="text-[10px] font-gta text-gray-300 tracking-wider">TIMER PRESETS</label>
+                <div class="flex space-x-2">
+                    <button onclick="setTimer(3)" class="flex-1 py-1.5 bg-gray-800 hover:bg-gray-700 text-xs font-gta rounded-lg border border-gray-600">3 Min</button>
+                    <button onclick="setTimer(5)" class="flex-1 py-1.5 bg-gray-800 hover:bg-gray-700 text-xs font-gta rounded-lg border border-gray-600">5 Min</button>
+                    <button onclick="setTimer(10)" class="flex-1 py-1.5 bg-gray-800 hover:bg-gray-700 text-xs font-gta rounded-lg border border-gray-600">10 Min</button>
+                    <button onclick="resetTimer()" class="px-3 py-1.5 bg-gtaCyan/20 text-gtaCyan hover:bg-gtaCyan hover:text-kickDark text-xs font-gta rounded-lg border border-gtaCyan/40"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Category / Game Changer -->
+            <div class="space-y-1.5">
+                <label class="text-[10px] font-gta text-gray-300 tracking-wider">STREAM CATEGORY</label>
+                <input type="text" id="category-input" value="Grand Theft Auto VI / Variety" oninput="updateCategory(this.value)" class="w-full bg-black/40 border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-white focus:border-kick outline-none">
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Countdown & Controls -->
+    <script>
+        let totalSeconds = 300; // 5 minutes default
+        let timerInterval = null;
+
+        function startCountdown() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            const formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('countdown-timer').innerText = formatted;
+        }
+
+        function setTimer(mins) {
+            totalSeconds = mins * 60;
+            updateTimerDisplay();
+            startCountdown();
+        }
+
+        function resetTimer() {
+            totalSeconds = 300;
+            updateTimerDisplay();
+            startCountdown();
+        }
+
+        function setStatus(text) {
+            document.getElementById('overlay-status-text').innerText = text;
+        }
+
+        function updateCategory(val) {
+            document.getElementById('current-category').innerText = val;
+        }
+
+        function toggleControls() {
+            const body = document.getElementById('controls-body');
+            body.classList.toggle('hidden');
+        }
+
+        // Initialize countdown on window load
+        window.onload = function() {
+            updateTimerDisplay();
+            startCountdown();
+        };
+    </script>
+</body>
+</html>
